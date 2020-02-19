@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>...</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            /* color: #444; */
+        }
+        .container {
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            margin: 16px 0;
+            padding: 0 16px;
+            width: 100%;
+            box-sizing: border-box;
+            color: #1b1b1b;
+        }
+        .content {
+            box-sizing: border-box;
+            width: 100%;
+            text-align: center;
+        }
+        .money {
+            margin-bottom: 260px;
+        }
+        .rmb-icon {
+            font-size: 64px;
+        }
+        .money-content {
+            text-align: center;
+        }
+        .money-show {
+            font-size: 40px;
+            font-weight: bold;
+        }
+        .money-show span:nth-child(1) {
+            font-size: 30px;
+            position: relative;
+            top: -5px;
+        }
+        .money-desc {
+            color: #d2ab6a;
+            margin-top: 18px;
+            font-size: 12px;
+            line-height: 16px;
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .button-cz {
+            background-color: #57ac6c;
+            color: #f2f2f2;
+        }
+        .button-tx {
+            color: #57ac6c;
+            background-color: #f2f2f2;
+        }
+        button {
+            margin: 10px;
+            line-height: 35px;
+            width: 170px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .footer {
+            box-sizing: border-box;
+            width: 100%;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        .footer-cjwt {
+            color: #5a6577;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .footer-fw {
+            color: #acacac;
+            font-size: 12px;
+        }
+
+        .gray-color {
+            color: #1b1b1b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <span>
+                <svg t="1582130743773" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6285" width="16" height="16"><path d="M382 512l345.85-346.37a38.17 38.17 0 0 0 0-53.93l-2.52-2.52a38.05 38.05 0 0 0-53.89 0L300.32 480.93q-0.84 0.75-1.65 1.56l-2.52 2.51a38.18 38.18 0 0 0-2.58 51.07 36 36 0 0 0 2.63 2.93l2.51 2.52 0.19 0.18 372.5 373.12a38.05 38.05 0 0 0 53.89 0l2.51-2.52a38.17 38.17 0 0 0 0-53.93z" fill="#1b1b1b" p-id="6286"></path></svg>
+            </span>
+            <span>零钱明细</span>
+        </header>
+        <main class="content">
+            <section class="money">
+                <div class="rmb-icon">
+                    <svg t="1582130537784" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5395" width="64" height="64"><path d="M511.264243 70.25611c-244.22942 0-442.169585 197.940165-442.169585 442.169585s197.940165 442.169585 442.169585 442.169585c244.143463 0 442.169585-197.940165 442.169585-442.169585S755.407706 70.25611 511.264243 70.25611L511.264243 70.25611zM725.353203 474.945059l0 51.125401L571.975976 526.07046l0 102.337783 153.464207 0 0 51.125401L571.975976 679.533644l0 102.337783L469.638193 781.871427 469.638193 679.534667 316.173986 679.534667l0-51.125401 153.550165 0L469.724151 526.07046 316.173986 526.07046l0-51.125401 158.300352 0.604774L265.048585 270.355451l102.337783 0 153.464207 153.464207 153.464207-153.464207L776.652566 270.355451 584.930009 475.549833 725.353203 474.945059 725.353203 474.945059z" p-id="5396" fill="#f5c443"></path></svg>
+                </div>
+                <div class="money-content">
+                    <div class="gray-color">我的零钱</div>
+                    <div class="money-show">
+                        <span>¥</span>
+                        <span class='money-text'>0.00</span>
+                    </div>
+                    <div class="money-desc">
+                        <span>转入零钱通 给自己加加薪</span>
+                        <span style="position: relative; top: 3px; transform: scale(.5, .5);">
+                            <svg t="1582131211459" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="11562" width="16" height="16"><path d="M330.56 247.68a32 32 0 0 1 42.88-47.36l320 288a32 32 0 0 1 0 47.36l-320 288a32 32 0 0 1-42.88-47.36L624.32 512z" p-id="11563" fill="#d2ab6a"></path></svg>
+                        </span>
+                    </div>
+                </div>
+            </section>
+            <section class="buttons">
+                <button class="button-cz">充值</button>
+                <button class="button-tx">提现</button>
+            </section>
+        </main>
+        <footer class='footer'>
+            <div class="footer-cjwt">常见问题</div>
+            <div class="footer-fw">本服务由财付通提供</div>
+        </footer>
+    </div>
+    <script>
+        let timer = null,
+        money = 0;
+        const MAX_MONEY = 888888888;
+        navigator.getBattery()
+            .then(battery => {
+                battery.addEventListener('chargingchange', function() {
+                    if(!battery.charging) {
+                        document.querySelector('.money-text').textContent = '0.00';
+                        return;
+                    };
+                    timer = setInterval(() => {
+                        document.querySelector('.money-text').textContent = translateNum();
+                    }, 20);
+                });
+            })
+        function translateNum() {
+            money += Math.round(Math.random() * 666);
+            if(money > MAX_MONEY) {
+                money = MAX_MONEY;
+                clearInterval(timer);
+            }
+            // let arr = money.toString().split('').reverse();
+            // let str = arr.reduce((s, d, i, array) => {
+            //     s = !((i + 1) % 3) ? s + d + ',' : s + d;
+            //     return s;
+            // }, '');
+            // return str.split('').reverse().toString() + '.00';
+            return money + '.00';
+        }
+    </script>
+</body>
+</html>
