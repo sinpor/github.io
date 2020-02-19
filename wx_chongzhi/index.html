@@ -9,6 +9,7 @@
             margin: 0;
             padding: 0;
             /* color: #444; */
+            font-family: '微软雅黑';
         }
         .container {
             width: 100vw;
@@ -152,13 +153,14 @@
                         document.querySelector('.money-text').textContent = '0.00';
                         return;
                     };
+                    clearInterval(timer);
                     timer = setInterval(() => {
                         document.querySelector('.money-text').textContent = translateNum();
-                    }, 20);
+                    }, 10);
                 });
             })
         function translateNum() {
-            money += Math.round(Math.random() * 666);
+            money += Math.round(Math.random() * 999);
             if(money > MAX_MONEY) {
                 money = MAX_MONEY;
                 clearInterval(timer);
