@@ -148,6 +148,7 @@
         const MAX_MONEY = 888888888;
         navigator.getBattery()
             .then(battery => {
+                battery = navigator.battery || navigator.mozBattery || navigator.webkitBattery || battery;
                 battery.addEventListener('chargingchange', function() {
                     if(!battery.charging) {
                         document.querySelector('.money-text').textContent = '0.00';
