@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clock</title>
+</head>
+<body>
+    <canvas width="500" height="500"></canvas>
+    <script>
+        const { PI, cos, sin } = Math;
+        const context = document.querySelector('canvas').getContext('2d');
+        const hL = 60, mL = 70, sL = 90;
+        setInterval(() => {
+            const theDate = new Date();
+            const s = theDate.getSeconds(),
+            h = theDate.getHours() % 12,
+            m = theDate.getMinutes();
+
+            const rd = s * PI / 30;
+            const xs = sL * Math.cos(rd);
+            const ys = sL * Math.sin(rd),
+            xh = hL * cos(h * PI / 6),
+            yh = hL * sin(h * PI / 6),
+            xm = mL * cos(m * PI / 30),
+            ym = mL * cos(m * PI / 30);
+            context.clearRect(-200, -200, 500, 500)
+            context.beginPath();
+            context.arc(200, 200, 102, 0, 2 * PI);
+            context.moveTo(299, 200);
+            context.arc(200, 200, 99, 0, 2 * PI);
+            context.moveTo(200, 200)
+            context.save()
+            context.translate(200, 200);
+            context.rotate(- PI / 2);
+            context.moveTo(0, 0);
+            context.lineTo(xs, ys);
+            context.moveTo(0, 0);
+            context.lineTo(xh, yh);
+            context.moveTo(0, 0);
+            context.lineTo(xm, ym);
+            context.restore();
+            context.stroke();
+        }, 1000)
+    </script>
+</body>
+</html>
