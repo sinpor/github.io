@@ -4,14 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clock</title>
+    <style>
+        html, body {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            position: relative;
+            text-align: center;
+        }
+        .container .loading {
+            position: absolute;
+            left: 50%;
+            top: 200px;
+            transform: translateX(-50%);
+        }
+        .container .loading.d-none {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-    <div style="text-align: center;">
+    <div class="container">
+        <div class="loading">loading...</div>
         <canvas width="400" height="400"></canvas>
     </div>
     <script>
         const { PI, cos, sin } = Math;
-        const context = document.querySelector('canvas').getContext('2d');
+        const canvas = document.querySelector('canvas');
         const hL = 45, mL = 65, sL = 85;
         const img = document.createElement('img');
         img.height = img.width = 500;
@@ -20,10 +41,20 @@
             tempImg = new Image();
             tempImg.src = img.src;
             const {width, height} = tempImg;
+            resetCanvas();
             drawClock({width, height});
+            document.querySelector('.loading').classList.add('d-none');
         }
-        // document.body.appendChild(img)
+        function resetCanvas() {
+            const { clientWidth } = document.body;
+            const realWidth = clientWidth >= 400 ? 400 : clientWidth < 350 ? 350 : clientWidth;
+            canvas.width = canvas.height = realWidth;
+        }
         function drawClock({width, height}) {
+            const context = canvas.getContext('2d');
+            const {width: cWidth, height: cHeight} = canvas;
+            const cX = cWidth /2 , cY = cHeight / 2;
+            const imgWidth = imgHeight = 220;
             setInterval(() => {
                 const theDate = new Date();
                 const s = theDate.getSeconds(),
@@ -38,13 +69,13 @@
                 ym = mL * sin(m * PI / 30);
                 context.clearRect(0, 0, 500, 500);
                 context.save();
-                context.translate(200, 200);
+                context.translate(cX, cY);
                 context.rotate(-PI / 93)
-                context.drawImage(img, 0, 0, width, height - 100, -110, -110, 220, 220);
+                context.drawImage(img, 0, 0, width, height - 100, -imgWidth / 2, -imgHeight / 2, imgWidth, imgHeight);
                 context.restore();
                 context.beginPath();
                 context.save()
-                context.translate(200, 200);
+                context.translate(cX, cY);
                 context.moveTo(0, 0)
                 context.rotate(- PI / 2);
                 context.save();
