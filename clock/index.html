@@ -93,6 +93,8 @@
             function animate() {
                 const requestAnimationFrame = window.requestAnimationFrame
                 || window.webkitRequestAnimationFrame;
+                
+                requestAnimationFrame(animate);
                 render();
             }
 
