@@ -55,7 +55,7 @@
             const {width: cWidth, height: cHeight} = canvas;
             const cX = cWidth /2 , cY = cHeight / 2;
             const imgWidth = imgHeight = 220;
-            setInterval(() => {
+            function render() {
                 const theDate = new Date();
                 const s = theDate.getSeconds(),
                 h = theDate.getHours() % 12,
@@ -88,7 +88,15 @@
                 context.lineTo(xs, ys);
                 context.restore();
                 context.stroke();
-            }, 1000)
+            }
+            
+            function animate() {
+                const requestAnimationFrame = window.requestAnimationFrame
+                || window.webkitRequestAnimationFrame;
+                render();
+            }
+
+            animate();
         }
         
     </script>
