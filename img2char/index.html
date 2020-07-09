@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Img2char</title>
+		<style></style>
+	</head>
+	<body>
+		<input type="file" id="image-input" />
+		<button class="submit">提交</button>
+		<script>
+            var CHAR = ['@', "&", '.', ' ']
+			var button = document.querySelector(".submit")
+			// handle
+			button.onclick = function () {
+				var fileInput = document.querySelector("#image-input")
+                if (!fileInput.value) return
+                var [file] = fileInput.files
+                var fileReader = new FileReader()
+                fileReader.readAsDataURL(file)
+                fileReader.onload = function(e) {
+                    var dataURL = e.target.result
+                    var img = document.createElement('img')
+                    img.src = dataURL
+                    img.onload = function() {
+                        var {width, height} = img
+                        var cvs = document.createElement('canvas')
+                        var ctx = cvs.getContext('2d')
+                        cvs.width = width
+                        cvs.height = height
+                        ctx.drawImage(img, 0, 0)
+                        var arr = ctx.getImageData(0, 0, width, height)
+                        console.log(arr);
+                        
+                        document.body.appendChild(cvs)
+                    }
+                    
+                }
+			}
+		</script>
+	</body>
+</html>
