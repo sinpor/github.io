@@ -58,7 +58,7 @@
             function render() {
                 const theDate = new Date();
                 const s = theDate.getSeconds(),
-                h = theDate.getHours() % 12,
+                h = theDate.getHours() % 12 + 1,
                 m = theDate.getMinutes();
                 const rd = s * PI / 30;
                 const xs = sL * Math.cos(rd);
