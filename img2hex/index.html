@@ -1,7 +1,10 @@
-<!DOCTYPE HTML PUBLIC>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 	<head>
-		<meta charset="utf-8">
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
 		<title>查看图片像素</title>
 
 		<style type="text/css">
@@ -9,7 +12,8 @@
 				box-sizing: border-box;
 			}
 
-			html,body {
+			html,
+			body {
 				margin: 0;
 				padding: 0;
 				width: 100%;
@@ -17,19 +21,18 @@
 			}
 
 			body {
-				margin: 0px;
 				background: #f2f2f0;
 			}
 			.code-container {
 				padding: 16px;
 				background-color: #ccc;
-				height: 500px;
+				max-height: calc(100% - 21px - 50%);
 				width: 100%;
 				overflow: auto;
 				word-break: break-word;
 			}
 
-			.code-container code{
+			.code-container code {
 				white-space: break-spaces;
 			}
 
@@ -37,30 +40,44 @@
 				display: inline-block;
 			}
 
-			/* #img-box { */
-				/* position: absolute; */
-			/* } */
+			#img-box {
+				width: 100%;
+				max-height: 50%;
+				overflow: auto;
+			}
 
 			#my-canvas {
 				visibility: hidden;
 				display: none;
 			}
+
+			.disabled {
+				cursor: not-allowed;
+			}
 		</style>
 
 		<script type="text/javascript">
-			window.onload = function() {
-				var myCanvas = document.getElementById('my-canvas');
-				var myContext = myCanvas.getContext('2d');
-				var canvas = document.createElement('canvas');
-				var context = canvas.getContext('2d');
-				var imgBox = document.getElementById('img-box');
+			window.onload = function () {
+				var myCanvas = document.getElementById("my-canvas")
+				var myContext = myCanvas.getContext("2d")
+				var canvas = document.createElement("canvas")
+				var context = canvas.getContext("2d")
+				var imgBox = document.getElementById("img-box")
 
-				const codeEle = document.getElementById('code');
+				const downloadEle = document.getElementById("download")
+
+				const codeEle = document.getElementById("code")
+
+				let filename = ""
+
 				var x = 0,
-					y = 0;
+					y = 0
 				var img_width = 0,
-					img_height = 0;
+					img_height = 0
 				var myColor = []
+
+				toggleDisabled(true)
+
 				// imgBox.addEventListener('click', function(ev) {
 				// 	x = ev.pageX;
 				// 	y = ev.pageY - imgBox.offsetTop;
@@ -68,138 +85,178 @@
 				// 	setColor()
 				// })
 
-				function setColor() {
-					const rgb = [236, 42, 140]
-					let color = []
-					const imageData = context.getImageData(0, 0, img_width, img_height);
-					const length = imageData.data.length;
-					for (let i = 0; i < length; i += 4) {
-						color.push(imageData.data[i], imageData.data[i + 1], imageData.data[i + 2])
-						if (color.join(',') == myColor.join(',')) {
-							for (var j = 0; j < rgb.length; j++) {
-								imageData.data[i - (rgb.length + 1 - j)] = rgb[j]
-							}
-						}
-						if (i > 0 && i % 4 === 0) { // 每四个元素为一个像素数据 r,g,b,alpha
-							color = []
-						}
-					}
-					myContext.putImageData(imageData, 0, 0)
-				}
+				// function setColor() {
+				// 	const rgb = [236, 42, 140]
+				// 	let color = []
+				// 	const imageData = context.getImageData(0, 0, img_width, img_height);
+				// 	const length = imageData.data.length;
+				// 	for (let i = 0; i < length; i += 4) {
+				// 		color.push(imageData.data[i], imageData.data[i + 1], imageData.data[i + 2])
+				// 		if (color.join(',') == myColor.join(',')) {
+				// 			for (var j = 0; j < rgb.length; j++) {
+				// 				imageData.data[i - (rgb.length + 1 - j)] = rgb[j]
+				// 			}
+				// 		}
+				// 		if (i > 0 && i % 4 === 0) { // 每四个元素为一个像素数据 r,g,b,alpha
+				// 			color = []
+				// 		}
+				// 	}
+				// 	myContext.putImageData(imageData, 0, 0)
+				// }
 
 				function getAllColor(filename) {
-					var imageData = context.getImageData(x, y, img_width, img_height);
+					var imageData = context.getImageData(
+						x,
+						y,
+						img_width,
+						img_height
+					)
 					const { data } = imageData
 					const lth = data.length
 
 					const imgArr = []
 
-					for(let i = 0; i <= lth; i+= 4) {
-						const hex = gethex(data[i], data[i+1], data[i+2])
+					for (let i = 0, j = 0; i < lth; i += 4, j++) {
+						const hex = gethex(data[i], data[i + 1], data[i + 2])
 						// imgArr.push(`<span class="hex-item">${hex}</span>`)
-						imgArr.push(`${hex.padEnd(9, '\ ')}\ \ `)
+						imgArr.push(`${hex},`)
+
+						if ((j + 1) % img_width === 0) {
+							imgArr[j] = imgArr[j] + "\n"
+						}
 					}
 
-					codeEle.innerHTML = imgArr.slice(0, 1000).join('')
-					download(filename, imgArr.join(''))
+					toggleDisabled(false)
+
+					codeEle.innerHTML = imgArr.slice(0, 1000).join("")
+					download(filename, imgArr.join(""))
 				}
 
-				function getColor() {
-					var imageData = context.getImageData(x, y, img_width, img_height);
-					console.log(imageData);
-					myColor = [imageData.data[0], imageData.data[1], imageData.data[2]]
-					var hexColor = gethex(...myColor)
-					console.log(hexColor)
-				}
+				// function getColor() {
+				// 	var imageData = context.getImageData(x, y, img_width, img_height);
+				// 	console.log(imageData);
+				// 	myColor = [imageData.data[0], imageData.data[1], imageData.data[2]]
+				// 	var hexColor = gethex(...myColor)
+				// 	console.log(hexColor)
+				// }
 				// 获取16进制颜色
 				function gethex(r, g, b) {
-					if (typeof r !== 'number') return '';
+					if (typeof r !== "number") return ""
 
 					// console.log(r, g, b)
-					r = r?.toString(10)?.padStart(0, 0);
-					g = g?.toString(10)?.padStart(0, 0);
-					b = b?.toString(10)?.padStart(0, 0);
+					r = r?.toString(10)?.padStart(0, 0)
+					g = g?.toString(10)?.padStart(0, 0)
+					b = b?.toString(10)?.padStart(0, 0)
 
-					// 补0 
+					// 补0
 					// r?.padStart(3, 0);
 					// g?.padStart(3, 0);
 					// b?.padStart(3, 0);
 
-					var hex = r + g + b;
+					var hex = `${r} ${g} ${b}`
 
-					// 简化处理,如 FFEEDD 可以写为 FED 
+					// 简化处理,如 FFEEDD 可以写为 FED
 					// if (r?.slice(0, 1) == r.slice(1, 1) && g.slice(0, 1) == g.slice(1, 1) && b.slice(0, 1) == b.slice(1, 1)) {
 					// 	hex = r.slice(0, 1) + g.slice(0, 1) + b.slice(0, 1);
 					// }
 
-					return hex;
+					return hex
 				}
 
 				function download(filename, text) {
-					var element = document.createElement('a');
-					element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-					element.setAttribute('download', `${filename}-${(Math.random() * 1000000).toString(36).slice(0, 5)}.txt`);
-					
-					element.style.display = 'none';
-					document.body.appendChild(element);
-					
-					element.click();
-					
-					document.body.removeChild(element);
+					var element = document.createElement("a")
+					element.setAttribute(
+						"href",
+						"data:text/plain;charset=utf-8," +
+							encodeURIComponent(text)
+					)
+					element.setAttribute("download", `${filename}-rgb.csv`)
+
+					element.style.display = "none"
+					document.body.appendChild(element)
+
+					element.click()
+
+					document.body.removeChild(element)
 				}
 
-				document.getElementById('img').onchange = function() {
-					var img = event.target.files[0];
-					// 检查能否读取图片 
+				function toggleDisabled(force) {
+					downloadEle.classList.toggle("disabled", force)
+				}
+
+				document.getElementById("img").onchange = function () {
+					var img = event.target.files[0]
+					// 检查能否读取图片
 					if (!img) {
-						return;
+						return
 					}
 
-					// 检查图片类型 
-					if (!(img.type.indexOf('image') == 0 && img.type && /\.(?:jpg|png|gif|jpeg)$/.test(img.name))) {
-						alert('图片只能是jpg,gif,png');
-						return;
+					// 检查图片类型
+					if (
+						!(
+							img.type.indexOf("image") == 0 &&
+							img.type &&
+							/\.(?:jpg|png|gif|jpeg)$/.test(img.name)
+						)
+					) {
+						alert("图片只能是jpg,gif,png")
+						return
 					}
-					// 检查图片尺寸 
-					// if (img.size > 120*1024) { 
-					//   alert('图片不能大于120K'); 
-					//   return ; 
+					// 检查图片尺寸
+					// if (img.size > 120*1024) {
+					//   alert('图片不能大于120K');
+					//   return ;
 					// }
-					var reader = new FileReader();
-					reader.readAsDataURL(img);
+					var reader = new FileReader()
+					reader.readAsDataURL(img)
 
-					const filename = img.name
+					filename = img.name
 
-					reader.onload = function(e) {
-						var image = new Image();
-						image.src = e.target.result;
-						imgBox.innerHTML = '';
+					reader.onload = function (e) {
+						toggleDisabled(true)
+						var image = new Image()
+						image.src = e.target.result
+						imgBox.innerHTML = ""
 						imgBox.appendChild(image)
-						image.onload = function() {
-							img_width = this.width;
-							img_height = this.height;
+						image.onload = function () {
+							img_width = this.width
+							img_height = this.height
 
-							// 设置画布尺寸 
-							canvas.width = img_width;
-							canvas.height = img_height;
+							// 设置画布尺寸
+							canvas.width = img_width
+							canvas.height = img_height
 
-							// 将图片按像素写入画布 
-							context.drawImage(this, 0, 0, img_width, img_height);
+							// 将图片按像素写入画布
+							context.drawImage(this, 0, 0, img_width, img_height)
 
 							getAllColor(filename)
 						}
 					}
 				}
+
+				downloadEle.addEventListener(
+					"click",
+					(e) => {
+						if (e.target.classList.contains("disabled")) return
+						getAllColor(filename)
+					},
+					false
+				)
 			}
 		</script>
 	</head>
 	<body>
-		<input type="file" class="file" id="img">
-		
+		<input type="file" class="file" id="img" />
+		<button type="button" id="download">下载</button>
+
 		<div id="img-box"></div>
 
-        
-		<canvas id="my-canvas" width="1200" height="1200" style="position: absolute; left: 1200px;"></canvas>
+		<canvas
+			id="my-canvas"
+			width="1200"
+			height="1200"
+			style="position: absolute; left: 1200px"
+		></canvas>
 
 		<div class="code-container">
 			<code id="code"></code>
