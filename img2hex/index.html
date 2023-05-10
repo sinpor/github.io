@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>查看图片像素二进制</title>
+		<title>查看图片像素</title>
 
 		<style type="text/css">
 			* {
@@ -23,10 +23,13 @@
 			.code-container {
 				padding: 16px;
 				background-color: #ccc;
-				height: calc(100% - 21px);
+				height: 500px;
 				width: 100%;
 				overflow: auto;
 				word-break: break-word;
+			}
+
+			.code-container code{
 				white-space: break-spaces;
 			}
 
@@ -34,10 +37,9 @@
 				display: inline-block;
 			}
 
-			#img-box {
-				position: absolute;
-				display: none;
-			}
+			/* #img-box { */
+				/* position: absolute; */
+			/* } */
 
 			#my-canvas {
 				visibility: hidden;
@@ -85,7 +87,7 @@
 					myContext.putImageData(imageData, 0, 0)
 				}
 
-				function getAllColor() {
+				function getAllColor(filename) {
 					var imageData = context.getImageData(x, y, img_width, img_height);
 					const { data } = imageData
 					const lth = data.length
@@ -95,10 +97,11 @@
 					for(let i = 0; i <= lth; i+= 4) {
 						const hex = gethex(data[i], data[i+1], data[i+2])
 						// imgArr.push(`<span class="hex-item">${hex}</span>`)
-						imgArr.push(`${hex}\t`)
+						imgArr.push(`${hex.padEnd(9, '\ ')}\ \ `)
 					}
 
-					codeEle.innerHTML = imgArr.join('')
+					codeEle.innerHTML = imgArr.slice(0, 1000).join('')
+					download(filename, imgArr.join(''))
 				}
 
 				function getColor() {
@@ -110,10 +113,12 @@
 				}
 				// 获取16进制颜色
 				function gethex(r, g, b) {
+					if (typeof r !== 'number') return '';
+
 					// console.log(r, g, b)
-					r = r?.toString(10)?.padStart(3, 0);
-					g = g?.toString(10)?.padStart(3, 0);
-					b = b?.toString(10)?.padStart(3, 0);
+					r = r?.toString(10)?.padStart(0, 0);
+					g = g?.toString(10)?.padStart(0, 0);
+					b = b?.toString(10)?.padStart(0, 0);
 
 					// 补0 
 					// r?.padStart(3, 0);
@@ -129,6 +134,20 @@
 
 					return hex;
 				}
+
+				function download(filename, text) {
+					var element = document.createElement('a');
+					element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+					element.setAttribute('download', `${filename}-${(Math.random() * 1000000).toString(36).slice(0, 5)}.txt`);
+					
+					element.style.display = 'none';
+					document.body.appendChild(element);
+					
+					element.click();
+					
+					document.body.removeChild(element);
+				}
+
 				document.getElementById('img').onchange = function() {
 					var img = event.target.files[0];
 					// 检查能否读取图片 
@@ -149,9 +168,12 @@
 					var reader = new FileReader();
 					reader.readAsDataURL(img);
 
+					const filename = img.name
+
 					reader.onload = function(e) {
 						var image = new Image();
 						image.src = e.target.result;
+						imgBox.innerHTML = '';
 						imgBox.appendChild(image)
 						image.onload = function() {
 							img_width = this.width;
@@ -164,7 +186,7 @@
 							// 将图片按像素写入画布 
 							context.drawImage(this, 0, 0, img_width, img_height);
 
-							getAllColor()
+							getAllColor(filename)
 						}
 					}
 				}
